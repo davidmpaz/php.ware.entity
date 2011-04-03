@@ -5,7 +5,7 @@ import org.eclipse.xtext.generator.*
 import org.eclipse.xtext.ui.generator.*
 
 var grammarURI = "classpath:/php/ware/Entity.xtext"
-var file.extensions = "entity"
+var file.extensions = "model"
 var projectName = "php.ware.entity"
 var runtimeProject = "../${projectName}"
 
@@ -27,6 +27,7 @@ Workflow {
 		pathUiProject = "${runtimeProject}.ui"
 		projectNameRt = projectName
 		projectNameUi = "${projectName}.ui"
+		encoding ="UTF-8"
 		language = {
 			uri = grammarURI
 			fileExtensions = file.extensions
