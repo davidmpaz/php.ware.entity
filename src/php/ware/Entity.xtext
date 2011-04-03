@@ -1,0 +1,9 @@
+grammar php.ware.Entity with org.eclipse.xtext.common.Terminals
+
+generate entity "http://www.ware.php/Entity"
+
+Model:
+    greetings+=Greeting*;
+
+Greeting:
+    'Hello' name=ID '!';
