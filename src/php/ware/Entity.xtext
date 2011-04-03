@@ -1,9 +1,58 @@
+/*
+ * Based on org.eclipse.xtext.example.Domainmodel from xtext examples
+ */
 grammar php.ware.Entity with org.eclipse.xtext.common.Terminals
 
 generate entity "http://www.ware.php/Entity"
 
-Model:
-    greetings+=Greeting*;
+DomainModel:
+    elements+=AbstractElement*;
 
-Greeting:
-    'Hello' name=ID '!';
+AbstractElement:
+    PackageDeclaration | Type | Import;
+
+Import:
+    'import' importedNamespace=QualifiedName;
+
+PackageDeclaration:
+    'package' name=QualifiedName '{'
+        elements+=AbstractElement*
+    '}';
+
+Type:
+    Entity | DataType;
+
+DataType:
+    'datatype' name=ID 'maps' languageType=ID;
+
+Entity:
+    'entity' name=ID ('extends' superType=[Entity|QualifiedName])? '{'
+        features+=Feature*
+    '}';
+
+Feature:
+    StructuralFeature | Operation;
+
+StructuralFeature:
+    Attribute | Reference;
+
+Attribute:
+    name=ID ':' type=TypeRef;
+
+Reference:
+    'ref' name=ID ':' type=TypeRef ('opposite' opposite=[Reference])?;
+
+Operation:
+    visibility=Visibility? 'op' name=ID '(' (params+=Parameter (',' params+=Parameter)*)? ')' ':' type=TypeRef;
+
+Parameter:
+    name=ID type=TypeRef;
+
+TypeRef:
+    referenced=[Type|QualifiedName] multi?='[]'? comp?='*'?;
+
+enum Visibility:
+    public | private | protected;
+
+QualifiedName:
+    ID ('.' ID)*;
