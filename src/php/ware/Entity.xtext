@@ -12,7 +12,7 @@ AbstractElement:
     PackageDeclaration | Type | Import;
 
 Import:
-    'import' importedNamespace=QualifiedName;
+    'import' importedNamespace=QualifiedNameWithWildCard;
 
 PackageDeclaration:
     'package' name=QualifiedName '{'
@@ -26,6 +26,7 @@ DataType:
     'datatype' name=ID 'maps' languageType=ID;
 
 Entity:
+    isAbstract?='abstract'? 
     'entity' name=ID ('extends' superType=[Entity|QualifiedName])? '{'
         features+=Feature*
     '}';
@@ -53,6 +54,9 @@ TypeRef:
 
 enum Visibility:
     public | private | protected;
+
+QualifiedNameWithWildCard:
+    QualifiedName '.*'?;
 
 QualifiedName:
     ID ('.' ID)*;
