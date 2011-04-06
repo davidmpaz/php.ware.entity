@@ -32,6 +32,7 @@ public class EntityScopeProvider extends AbstractDeclarativeScopeProvider {
         Iterable<Reference> references = Iterables.filter(features,
                 Reference.class);
         references = Iterables.filter(references, new Predicate<Reference>() {
+            @Override
             public boolean apply(Reference input) {
                 return ref.eContainer().equals(input.getType().getReferenced());
             }

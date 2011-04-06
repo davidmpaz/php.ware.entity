@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: php.ware.entity
-Bundle-Vendor: My Company
+Bundle-Vendor: cid
 Bundle-Version: 1.0.0
 Bundle-SymbolicName: php.ware.entity; singleton:=true
 Bundle-ActivationPolicy: lazy
@@ -18,7 +18,7 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.emf.common,
  org.antlr.runtime
 Import-Package: org.apache.log4j
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: php.ware,
  php.ware.services,
  php.ware.entity,
