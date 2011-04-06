@@ -20,20 +20,22 @@ import com.google.common.collect.Iterables;
 /**
  * This class contains custom scoping description.
  * 
- * see : http://www.eclipse.org/Xtext/documentation/latest/xtext.html#scoping
- * on how and when to use it
- *
+ * see : http://www.eclipse.org/Xtext/documentation/latest/xtext.html#scoping on
+ * how and when to use it
+ * 
  */
 public class EntityScopeProvider extends AbstractDeclarativeScopeProvider {
 
-	public IScope scope_Reference_opposite(final Reference ref, EReference eRef) {
-		EList<Feature> features = ((Entity) ref.getType().getReferenced()).getFeatures();
-		Iterable<Reference> references = Iterables.filter(features, Reference.class);
-		references = Iterables.filter(references, new Predicate<Reference>(){
-			@Override
-			public boolean apply(Reference input) {
-				return ref.eContainer().equals(input.getType().getReferenced());
-			}});
-		return scopeFor(references);
-	}
+    public IScope scope_Reference_opposite(final Reference ref, EReference eRef) {
+        EList<Feature> features = ((Entity) ref.getType().getReferenced())
+                .getFeatures();
+        Iterable<Reference> references = Iterables.filter(features,
+                Reference.class);
+        references = Iterables.filter(references, new Predicate<Reference>() {
+            public boolean apply(Reference input) {
+                return ref.eContainer().equals(input.getType().getReferenced());
+            }
+        });
+        return scopeFor(references);
+    }
 }
