@@ -5,6 +5,9 @@ package php.ware.formatting;
 
 import java.util.List;
 
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.xtext.AbstractElement;
+import org.eclipse.xtext.Group;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.formatting.impl.AbstractDeclarativeFormatter;
 import org.eclipse.xtext.formatting.impl.FormattingConfig;
@@ -18,29 +21,60 @@ import php.ware.services.EntityGrammarAccess;
  * see : http://www.eclipse.org/Xtext/documentation/latest/xtext.html#formatting
  * on how and when to use it
  * 
- * Also see {@link org.eclipse.xtext.xtext.XtextFormattingTokenSerializer} as an example
+ * Also see {@link org.eclipse.xtext.xtext.XtextFormattingTokenSerializer} as an
+ * example
  */
 public class EntityFormatter extends AbstractDeclarativeFormatter {
 
-	@Override
-	protected void configureFormatting(FormattingConfig c) {
+    @Override
+    protected void configureFormatting(FormattingConfig c) {
 
-		EntityGrammarAccess f = (EntityGrammarAccess)getGrammarAccess();
-		// It's usually a good idea to activate the following three statements.
-		// They will add and preserve newlines around comments
-		c.setLinewrap(0, 1, 2).before(f.getSL_COMMENTRule());
-		c.setLinewrap(0, 1, 2).before(f.getML_COMMENTRule());
-		c.setLinewrap(0, 1, 1).after(f.getML_COMMENTRule());
+        EntityGrammarAccess f = (EntityGrammarAccess) getGrammarAccess();
+        // It's usually a good idea to activate the following three statements.
+        // They will add and preserve newlines around comments
+        c.setLinewrap(0, 1, 2).before(f.getSL_COMMENTRule());
+        c.setLinewrap(0, 1, 2).before(f.getML_COMMENTRule());
+        c.setLinewrap(0, 1, 1).after(f.getML_COMMENTRule());
 
-		c.setLinewrap(1, 2, 3).around(f.getAbstractElementRule());
-		c.setLinewrap(1, 2, 3).around(f.getPackageDeclarationRule());
-		c.setLinewrap(1, 1, 2).around(f.getFeatureRule());
-		c.setNoSpace().before(f.getTypeRefAccess().getMultiLeftSquareBracketRightSquareBracketKeyword_1_0());
+        c.setLinewrap(1, 2, 3).around(f.getAbstractElementRule());
+        c.setLinewrap(1, 2, 3).around(f.getPackageDeclarationRule());
 
-		List<Pair<Keyword,Keyword>> pairs = f.findKeywordPairs("{", "}");
-		for (Pair<Keyword, Keyword> pair : pairs) {
-			c.setIndentation(pair.getFirst(), pair.getSecond());
-			c.setLinewrap(2).after(pair.getSecond());
-		}
-	}
+        // make properties/reference joint together
+        c.setLinewrap(1, 1, 1).around(f.getFeatureRule());
+        // operations separated by on line
+        c.setLinewrap(2).before(f.getOperationRule());
+
+        // make multiplicity appear right after the type declaration, no spaces
+        c.setNoSpace()
+                .before(f
+                        .getTypeRefAccess()
+                        .getMultiLeftSquareBracketRightSquareBracketKeyword_1_0());
+
+        // import statements
+        c.setLinewrap(1, 1, 1).around(f.getImportRule());
+
+        // entity statements
+        c.setLinewrap(0, 1, 1).before(f.getEntityRule());
+        c.setLinewrap(0, 1, 2).after(f.getEntityRule());
+
+        // indent content inside curly braces
+        List<Pair<Keyword, Keyword>> curlyPairs = f.findKeywordPairs("{", "}");
+        for (Pair<Keyword, Keyword> pair : curlyPairs) {
+            c.setIndentation(pair.getFirst(), pair.getSecond());
+            c.setLinewrap(2).after(pair.getSecond());
+            c.setLinewrap(2).after(pair.getFirst());
+        }
+
+        // parameters statements
+        Group group = f.getParameterAccess().getGroup();
+        EList<AbstractElement> elems = group.getElements();
+        c.setNoLinewrap().bounds(elems.get(0), elems.get(elems.size() - 1));
+
+        List<Pair<Keyword, Keyword>> parentPairs = f.findKeywordPairs("(", ")");
+        for (Pair<Keyword, Keyword> pair : parentPairs) {
+            c.setIndentation(pair.getFirst(), pair.getSecond());
+            c.setNoLinewrap().after(pair.getSecond());
+        }
+
+    }
 }
