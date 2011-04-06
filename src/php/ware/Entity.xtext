@@ -50,7 +50,7 @@ Parameter:
     name=ID type=TypeRef;
 
 TypeRef:
-    referenced=[Type|QualifiedName] multi?='[]'? comp?='*'?;
+    referenced=[Type|QualifiedName] multi?='[]'? comp?='+'?;
 
 enum Visibility:
     public | private | protected;
